@@ -8,6 +8,7 @@ var app = require('../app');
 var debug = require('debug')('mern-skeleton:server');
 var http = require('http');
 var db = require('./../models');
+require('dotenv').config();
 
 /**
  * Get port from environment and store in Express.
@@ -26,7 +27,7 @@ var server = http.createServer(app);
  * Listen on provided port, on all network interfaces.
  */
 db.sequelize.sync({
-    force: true,
+    // force: true,
 }).then(() => {
     server.listen(port);
     server.on('error', onError);

@@ -1,0 +1,137 @@
+process.env.NODE_ENV = 'test';
+
+var chai = require('chai');
+var chaiHttp = require('chai-http');
+var expect = require('chai').expect;
+var app = require('../app');
+var db = require('./../models');
+
+chai.should();
+chai.use(chaiHttp);
+
+describe('Users api routes', () => {
+  beforeEach(done => {
+    db.sequelize.sync({ force: true }).then(() => {
+      done();
+    });
+  });
+
+  describe('POST route /api/users', () => {
+    it('should not signed in a user without name', done => {
+      let user = {
+        email: 'johndoe@example.com',
+        password: 'password',
+      };
+      chai
+        .request(app)
+        .post('/api/users')
+        .send(user)
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.errors.should.be.a('object');
+          res.body.errors.name.should.be.a('object');
+          res.body.errors.name.errors.length.should.be.eql(2);
+          done();
+        });
+    });
+
+    it('should not signed in a user without email', done => {
+      let user = {
+        name: 'John Doe',
+        password: 'password',
+      };
+      chai
+        .request(app)
+        .post('/api/users')
+        .send(user)
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.errors.should.be.a('object');
+          res.body.errors.email.should.be.a('object');
+          res.body.errors.email.errors.length.should.be.eql(1);
+          done();
+        });
+    });
+
+    it('should not signed in a user without password', done => {
+      let user = {
+        name: 'John Doe',
+        email: 'johndoe@example.com',
+      };
+      chai
+        .request(app)
+        .post('/api/users')
+        .send(user)
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.errors.should.be.a('object');
+          res.body.errors.password.should.be.a('object');
+          res.body.errors.password.errors.length.should.be.eql(1);
+          done();
+        });
+    });
+
+    it('should not signed in a user with short password', done => {
+      let user = {
+        name: 'John Doe',
+        email: 'johndoe@example.com',
+        password: 'passw',
+      };
+      chai
+        .request(app)
+        .post('/api/users')
+        .send(user)
+        .end((err, res) => {
+          res.should.have.status(400);
+          res.body.errors.should.be.a('object');
+          res.body.errors.password.should.be.a('object');
+          res.body.errors.password.errors.length.should.be.eql(1);
+          done();
+        });
+    });
+
+    it('should signed in a new user', done => {
+      let user = {
+        name: 'John Doe',
+        email: 'johndoe@example.com',
+        password: 'password',
+      };
+      chai
+        .request(app)
+        .post('/api/users')
+        .send(user)
+        .end((err, res) => {
+          res.body.should.be.a('object');
+          res.should.have.status(200);
+          res.body.should.have
+            .property('message')
+            .eql('Successfully signed up!');
+          done();
+        });
+    });
+
+    it('should not signed in a user with a used email address', done => {
+      let userData = {
+        name: 'John Doe',
+        email: 'johndoe@example.com',
+        password: '123456',
+      };
+
+      db.User.create(userData).then(user => {
+        chai
+          .request(app)
+          .post('/api/users')
+          .send(userData)
+          .end((err, res) => {
+            res.body.should.be.a('object');
+            res.should.have.status(409);
+            res.body.should.be.a('object');
+            res.body.should.have
+              .property('message')
+              .eql('Duplicate email address!');
+            done();
+          });
+      });
+    });
+  });
+});
