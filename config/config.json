@@ -1,0 +1,20 @@
+{
+  "development": {
+    "username": "mern_skeleton_user",
+    "password": "123456",
+    "database": "mern_skeleton_db",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  },
+  "test": {
+    "storage": "./db/database.sqlite",
+    "dialect": "sqlite"
+  },
+  "production": {
+    "username": "root",
+    "password": null,
+    "database": "database_production",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}
