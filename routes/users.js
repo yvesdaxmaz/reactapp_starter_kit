@@ -5,7 +5,10 @@ const db = require('./../models');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
+  db.User.findAll({}).then(users => {
+    users.map(user => delete user.password);
+    res.status(200).json(users);
+  });
 });
 
 /* POST create a user. */

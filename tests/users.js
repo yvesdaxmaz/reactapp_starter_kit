@@ -16,6 +16,24 @@ describe('Users api routes', () => {
     });
   });
 
+  describe('GET route /api/users', () => {
+    it('should return all users in the database', done => {
+      db.User.bulkCreate([
+        { name: 'John Doe', email: 'johndoe@example.com', password: '123456' },
+        { name: 'Jeanne', email: 'jeannedoe@example.com', password: '123456' },
+      ]).then(users => {
+        chai
+          .request(app)
+          .get('/api/users')
+          .end((err, res) => {
+            res.should.have.status(200);
+            res.body.should.be.a('array');
+            res.body.length.should.be.eql(2);
+            done(0);
+          });
+      });
+    });
+  });
   describe('POST route /api/users', () => {
     it('should not signed in a user without name', done => {
       let user = {
