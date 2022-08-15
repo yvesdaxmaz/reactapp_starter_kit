@@ -16,6 +16,27 @@ describe('Users api routes', () => {
     });
   });
 
+  describe('GET route /api/users/:user_id', () => {
+    it('should return a single users', done => {
+      db.User.create({
+        name: 'John Doe',
+        email: 'johndoe@example.com',
+        password: '123456',
+      }).then(user => {
+        chai
+          .request(app)
+          .get('/api/users/1')
+          .end((err, res) => {
+            res.should.have.status(200);
+            res.body.should.be.a('object');
+            res.body.email.should.be.eql('johndoe@example.com');
+            res.body.name.should.be.eql('John Doe');
+            done();
+          });
+      });
+    });
+  });
+
   describe('GET route /api/users', () => {
     it('should return all users in the database', done => {
       db.User.bulkCreate([
@@ -29,7 +50,7 @@ describe('Users api routes', () => {
             res.should.have.status(200);
             res.body.should.be.a('array');
             res.body.length.should.be.eql(2);
-            done(0);
+            done();
           });
       });
     });
@@ -144,9 +165,12 @@ describe('Users api routes', () => {
             res.body.should.be.a('object');
             res.should.have.status(409);
             res.body.should.be.a('object');
-            res.body.should.have
-              .property('message')
-              .eql('Duplicate email address!');
+            res.body.errors.should.be.a('object');
+            res.body.errors.email.should.be.a('object');
+            res.body.errors.email.errors.length.should.be.eql(1);
+            res.body.errors.email.errors.should.contain(
+              'Email already exists.',
+            );
             done();
           });
       });

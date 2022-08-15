@@ -11,6 +11,13 @@ router.get('/', function(req, res, next) {
   });
 });
 
+/* GET a single user */
+router.get('/:user_id', function(req, res, next) {
+  db.User.findByPk(req.params.user_id).then(user => {
+    res.status(200).json(user);
+  });
+});
+
 /* POST create a user. */
 router.post(
   '/',
@@ -42,8 +49,12 @@ router.post(
         if (user) {
           res.status(409).json({
             code: 409,
-            type: 'Duplicated',
-            message: 'Duplicate email address!',
+            type: 'ValidationError',
+            errors: {
+              email: {
+                errors: ['Email already exists.'],
+              },
+            },
           });
         } else {
           db.User.create(req.body).then(user => {
@@ -68,7 +79,11 @@ router.post(
         },
         {},
       );
-      res.status(400).json({ code: 400, type: 'ValidationError', errors });
+      res.status(400).json({
+        code: 400,
+        type: 'ValidationError',
+        errors,
+      });
     }
   },
 );

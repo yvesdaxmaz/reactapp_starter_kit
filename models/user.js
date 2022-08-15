@@ -22,7 +22,14 @@ module.exports = (sequelize, DataTypes) => {
       tableName: 'users',
       defaultScope: {
         attributes: {
-          exclude: ['password'],
+          exclude: [],
+        },
+      },
+      hooks: {
+        beforeCreate: (user, options) => {
+          let { password } = user;
+          const hash = bcrypt.hashSync(password, saltRounds);
+          user.dataValues.password = hash;
         },
       },
     },
@@ -30,12 +37,5 @@ module.exports = (sequelize, DataTypes) => {
   User.associate = function(models) {
     // associations can be defined here
   };
-  User.beforeCreate(async (user, options) => {
-    let { password } = user;
-    bcrypt.hash(password, saltRounds).then(function(hash) {
-      user.password = hash;
-    });
-  });
-
   return User;
 };
