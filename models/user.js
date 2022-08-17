@@ -31,6 +31,11 @@ module.exports = (sequelize, DataTypes) => {
           const hash = bcrypt.hashSync(password, saltRounds);
           user.dataValues.password = hash;
         },
+        beforeUpdate: (user, options) => {
+          let { password } = user;
+          const hash = bcrypt.hashSync(password, saltRounds);
+          user.dataValues.password = hash;
+        },
       },
     },
   );

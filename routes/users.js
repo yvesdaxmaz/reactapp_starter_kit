@@ -1,7 +1,9 @@
 const express = require('express');
-const { checkSchema, validationResult } = require('express-validator');
+const { check, checkSchema, validationResult } = require('express-validator');
 const router = express.Router();
 const db = require('./../models');
+const passport = require('passport');
+const jwt = require('jsonwebtoken');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -12,12 +14,93 @@ router.get('/', function(req, res, next) {
 });
 
 /* GET a single user */
-router.get('/:user_id', function(req, res, next) {
-  db.User.findByPk(req.params.user_id).then(user => {
-    res.status(200).json(user);
-  });
-});
+router.get(
+  '/:user_id',
+  (req, res, next) =>
+    passport.authenticate('jwt', { session: false }, function(err, user, info) {
+      if (err || !user) {
+        res.status(401).json({
+          message: 'UnauthorizedError: No authorization token was found',
+        });
+      } else {
+        return next();
+      }
+    })(req, res, next),
+  function(req, res, next) {
+    db.User.findByPk(req.params.user_id).then(user => {
+      res.status(200).json(user);
+    });
+  },
+);
 
+/* PUT update a user. */
+router.put(
+  '/:user_id',
+  (req, res, next) => {
+    passport.authenticate('jwt', { session: false }, function(err, user, info) {
+      if (err || !user) {
+        res.status(401).json({
+          message: 'UnauthorizedError: No authorization token was found',
+        });
+      } else {
+        return next();
+      }
+    })(req, res, next);
+  },
+  checkSchema({
+    email: {
+      isEmail: true,
+      optional: {
+        nullable: true,
+      },
+    },
+  }),
+  function(req, res, next) {
+    const result = validationResult(req);
+    if (result.isEmpty()) {
+      let authorization = req.headers.authorization;
+      let jwt_token = authorization.split(' ')[1];
+      jwt.verify(
+        jwt_token,
+        '5ebe2294ecd0e0f08eab7690d2a6ee69',
+        (err, payload) => {
+          db.User.findByPk(req.params.user_id).then(user => {
+            if (user.id == payload.id) {
+              user.update(req.body).then(updatedUser => {
+                res.status(200).json(updatedUser);
+              });
+            } else {
+              res.status(401).json({
+                message:
+                  'UnauthorizedError: You are not allowed to perform this action',
+              });
+            }
+          });
+        },
+      );
+    } else {
+      let errors = Array.from(result.errors).reduce(
+        (accumulator, { param, msg, value }) => {
+          let keys = Object.keys(accumulator);
+          if (keys.indexOf(param) != -1) {
+            accumulator[param].errors.push(msg);
+          } else {
+            accumulator[param] = {
+              errors: [msg],
+            };
+          }
+          return accumulator;
+        },
+        {},
+      );
+      res.status(400).json({
+        code: 400,
+        type: 'ValidationError',
+        errors,
+      });
+    }
+  },
+);
 /* POST create a user. */
 router.post(
   '/',
@@ -88,4 +171,5 @@ router.post(
   },
 );
 
+module.exports = router;
 module.exports = router;

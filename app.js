@@ -3,6 +3,10 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var passport = require('passport');
+var JwtStrategy = require('passport-jwt').Strategy;
+var ExtractJwt = require('passport-jwt').ExtractJwt;
+var db = require('./models');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -21,6 +25,24 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// Setting passport for authentication
+let jwtOptions = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: '5ebe2294ecd0e0f08eab7690d2a6ee69',
+};
+passport.use(
+  new JwtStrategy(jwtOptions, (jwt_payload, done) => {
+    let { id } = jwt_payload;
+    db.User.findByPk(id).then(user => {
+      if (user) {
+        return done(null, user);
+      } else {
+        return done(null, false);
+      }
+    });
+  }),
+);
 
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
