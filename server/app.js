@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var swaggerUi = require('swagger-ui-express');
 var passport = require('passport');
 var JwtStrategy = require('passport-jwt').Strategy;
 var ExtractJwt = require('passport-jwt').ExtractJwt;
@@ -43,6 +44,10 @@ passport.use(
     });
   }),
 );
+
+// Setting Swagger
+app.use('/api/docs', swaggerUi.serve);
+app.get('/api/docs', swaggerUi.setup(require('./swagger.json')));
 
 app.use('/', indexRouter);
 app.use('/auth', authRouter);

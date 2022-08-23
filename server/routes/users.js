@@ -101,6 +101,7 @@ router.put(
     }
   },
 );
+
 /* POST create a user. */
 router.post(
   '/',
@@ -171,5 +172,34 @@ router.post(
   },
 );
 
-module.exports = router;
+/* POST create a user. */
+router.delete(
+  '/:user_id',
+  (req, res, next) =>
+    passport.authenticate('jwt', { session: false }, (err, user, info) => {
+      if (err || !user) {
+        res.status(401).json({
+          message: 'UnauthorizedError: No authorization token was found',
+        });
+      } else {
+        return next();
+      }
+    })(req, res, next),
+  function(req, res, next) {
+    db.User.findByPk(req.params.user_id).then(user => {
+      if (user) {
+        user.destroy().then(result => {
+          res.sendStatus(204);
+        });
+      } else {
+        res.status(404).json({
+          code: 404,
+          type: 'Not Found',
+          message: 'Unable to perform this action',
+        });
+      }
+    });
+  },
+);
+
 module.exports = router;

@@ -316,4 +316,43 @@ describe('Users api routes', () => {
       });
     });
   });
+
+  describe('DELETE route /api/users/:user_id', function() {
+    it('should allow user to delete their account', done => {
+      db.User.create({
+        name: 'John Doe',
+        email: 'johndoe@example.com',
+        password: '123456',
+      }).then(user => {
+        let token = jwt.sign(
+          { id: user.id },
+          '5ebe2294ecd0e0f08eab7690d2a6ee69',
+        );
+        chai
+          .request(app)
+          .delete('/api/users/1')
+          .set('authorization', `Bearer ${token}`)
+          .end((err, res) => {
+            res.should.have.status(204);
+            db.User.findByPk(1).then(user => {
+              expect(user).to.be.null;
+              done();
+            });
+          });
+      });
+    });
+
+    it('should not allow unauthenticated to delete their account', done => {
+      chai
+        .request(app)
+        .delete('/api/users/1')
+        .end((err, res) => {
+          res.should.have.status(401);
+          res.body.should.have
+            .property('message')
+            .to.be.eql('UnauthorizedError: No authorization token was found');
+          done();
+        });
+    });
+  });
 });
