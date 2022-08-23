@@ -8,6 +8,8 @@
     "@testing-library/user-event": "^13.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^4.4.0",
+    "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
     "web-vitals": "^2.1.4"
   },
@@ -19,10 +21,17 @@
     "build:style": "npx tailwindcss build ./src/styles/main.css -o ./src/styles/tailwind.css --watch"
   },
   "eslintConfig": {
-    "extends": ["react-app", "react-app/jest"]
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
   "browserslist": {
-    "production": [">0.2%", "not dead", "not op_mini all"],
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
@@ -31,6 +40,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.8",
+    "jest-watch-typeahead": "^0.6.5",
     "postcss": "^8.4.16",
     "tailwindcss": "^3.1.8"
   }

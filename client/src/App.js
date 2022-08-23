@@ -1,10 +1,11 @@
+import Layout from  './containers/Layout';
+import Header from './components/Header/Header';
+
 function App() {
   return (
-    <div className="App">
-      <header className="">
-        <h2 className="text-purple-600">Mern skeleton starter kit</h2>
-      </header>
-    </div>
+      <Layout>
+        <Header />
+      </Layout>
   );
 }
 
