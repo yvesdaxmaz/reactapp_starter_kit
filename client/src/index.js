@@ -7,7 +7,9 @@ import { BrowserRouter } from 'react-router-dom';
 import { StateProvider } from './StateProvider';
 import reducer from './reducer';
 
-const initialState = {};
+const initialState = {
+  name: 'MERN Skeleton',
+};
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

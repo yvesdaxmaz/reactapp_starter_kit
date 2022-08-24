@@ -1,6 +1,8 @@
 import { MdHome } from 'react-icons/md';
 import { Link } from 'react-router-dom';
+import { useStateValue } from '../../StateProvider';
 const Header = props => {
+  const [{ name }, dispatch] = useStateValue();
   return (
     <header>
       <nav className="bg-gray-800">
@@ -53,7 +55,7 @@ const Header = props => {
                   role="logo"
                   className="flex space-x-2 items-center text-2xl font-bold text-white"
                 >
-                  <span>MERN Skeleton</span>
+                  <span>{name}</span>
                   <MdHome />
                 </Link>
               </div>
