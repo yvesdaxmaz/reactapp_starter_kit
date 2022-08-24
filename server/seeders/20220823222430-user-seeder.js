@@ -1,18 +1,8 @@
 'use strict';
-const casual = require('casual');
-const bcrypt = require('bcrypt'); 
+const bcrypt = require('bcrypt');
+const users = require('./users.json');
 
-const hash =  bcrypt.hashSync('password', 10);
-
-casual.define('user', function() {
-  return {
-      name: casual.name,
-      email: casual.email,
-      password: hash,
-      createdAt: new Date,
-      updatedAt: new Date,
-  }
-});
+const hash = bcrypt.hashSync('password', 10);
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
@@ -27,8 +17,15 @@ module.exports = {
       }], {});
     */
 
-      
-      return queryInterface.bulkInsert('users', (new Array(50)).fill(casual.user));
+    const usersData = users.map(user => {
+      return {
+        ...user,
+        password: hash,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+    });
+    return queryInterface.bulkInsert('users', usersData);
   },
 
   down: (queryInterface, Sequelize) => {
@@ -40,6 +37,6 @@ module.exports = {
       return queryInterface.bulkDelete('People', null, {});
     */
 
-      return queryInterface.bulkDelete('users', null, {});
-  }
+    return queryInterface.bulkDelete('users', null, {});
+  },
 };
