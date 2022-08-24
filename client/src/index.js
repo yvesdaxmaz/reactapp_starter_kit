@@ -4,14 +4,20 @@ import './styles/tailwind.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
+import { StateProvider } from './StateProvider';
+import reducer from './reducer';
+
+const initialState = {};
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
+      <StateProvider reducer={reducer} initialState={initialState}>
         <App />
+      </StateProvider>
     </BrowserRouter>
-  </React.StrictMode>
+  </React.StrictMode>,
 );
 
 // If you want to start measuring performance in your app, pass a function
