@@ -3,6 +3,8 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var helmet = require('helmet');
+var cors = require('cors');
 var swaggerUi = require('swagger-ui-express');
 var passport = require('passport');
 var JwtStrategy = require('passport-jwt').Strategy;
@@ -25,6 +27,8 @@ if (process.env.NODE_ENV == 'development') {
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(cors());
+app.use(helmet());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Setting passport for authentication
