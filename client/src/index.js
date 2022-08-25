@@ -9,6 +9,7 @@ import reducer from './reducer';
 
 const initialState = {
   name: 'MERN Skeleton',
+  usersFetched: false,
   users: [],
 };
 

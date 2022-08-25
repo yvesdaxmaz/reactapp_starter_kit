@@ -6,6 +6,7 @@ const reducer = (state, action) => {
       return {
         ...state,
         users,
+        usersFetched: true,
       };
     default:
       return state;

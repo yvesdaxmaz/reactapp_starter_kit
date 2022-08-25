@@ -1,20 +1,23 @@
 import { useEffect } from 'react';
 import { FETCH_USERS_LIST } from '../../actionTypes';
 import { useStateValue } from '../../StateProvider';
+import UsersList from '../../components/UsersList/UserList';
 
 const Users = props => {
-  const [{ users }, dispatch] = useStateValue();
+  const [{ users, usersFetched }, dispatch] = useStateValue();
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
-    fetch('http://localhost:3000/api/users', { method: 'get', signal })
-      .then(response => response.json())
-      .then(users => {
-        dispatch({ type: FETCH_USERS_LIST, users });
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    if (!usersFetched) {
+      fetch('http://localhost:3000/api/users', { method: 'get', signal })
+        .then(response => response.json())
+        .then(users => {
+          dispatch({ type: FETCH_USERS_LIST, users });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
     return () => {
       console.log('request aborted');
       controller.abort();
@@ -29,7 +32,9 @@ const Users = props => {
             All Users
           </h3>
         </div>
-        <div className="px-4 py-5 sm:p-6"></div>
+        <div className="px-4 py-5 sm:p-6">
+          <UsersList />
+        </div>
       </div>
     </div>
   );
