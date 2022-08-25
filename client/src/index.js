@@ -9,6 +9,7 @@ import reducer from './reducer';
 
 const initialState = {
   name: 'MERN Skeleton',
+  users: [],
 };
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

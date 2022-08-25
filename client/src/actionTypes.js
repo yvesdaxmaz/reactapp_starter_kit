@@ -1,0 +1,1 @@
+export const FETCH_USERS_LIST = 'FETCH_USERS_LIST';
