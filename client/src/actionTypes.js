@@ -1,1 +1,2 @@
 export const FETCH_USERS_LIST = 'FETCH_USERS_LIST';
+export const AUTH_SIGNUP_USER = 'AUTH_SIGNUP_USER';
