@@ -1,8 +1,10 @@
 import { MdHome } from 'react-icons/md';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useStateValue } from '../../StateProvider';
 const Header = props => {
   const [{ name }, dispatch] = useStateValue();
+  const { pathname } = useLocation();
+
   return (
     <header>
       <nav className="bg-gray-800">
@@ -53,7 +55,11 @@ const Header = props => {
                 <Link
                   to="/"
                   role="logo"
-                  className="flex space-x-2 items-center text-2xl font-bold text-white"
+                  className={
+                    pathname === '/'
+                      ? 'flex space-x-2 items-center text-2xl font-bold text-red-600'
+                      : 'flex space-x-2 items-center text-2xl font-bold text-white'
+                  }
                 >
                   <span>{name}</span>
                   <MdHome />
@@ -63,20 +69,32 @@ const Header = props => {
                 <div className="flex space-x-4">
                   <Link
                     to="/users"
-                    className="bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium"
+                    className={
+                      pathname === '/users'
+                        ? 'bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium'
+                        : 'text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium'
+                    }
                     aria-current="page"
                   >
                     Users
                   </Link>
                   <Link
                     to="/signup"
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                    className={
+                      pathname === '/signup'
+                        ? 'bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium'
+                        : 'text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium'
+                    }
                   >
                     Sign Up
                   </Link>
                   <Link
                     to="/signin"
-                    className="text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                    className={
+                      pathname === '/signin'
+                        ? 'bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium'
+                        : 'text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium'
+                    }
                   >
                     Sign In
                   </Link>
