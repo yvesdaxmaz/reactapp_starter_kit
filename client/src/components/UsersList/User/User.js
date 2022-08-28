@@ -8,11 +8,7 @@ const User = ({ user }) => (
             {user.name}
           </h3>
         </div>
-        {/*
-            <p className="mt-1 text-gray-500 text-sm truncate">
-              Regional Paradigm Technician
-            </p>
-        */}
+        <p className="mt-1 text-gray-500 text-sm truncate">{user.email}</p>
       </div>
       <FaUserCircle className="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0" />
     </div>
