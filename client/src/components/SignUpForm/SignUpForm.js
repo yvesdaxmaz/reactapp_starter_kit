@@ -125,12 +125,13 @@ const SignUpForm = props => {
     return res.test(String(email).toLowerCase());
   };
 
+  let { name, email, password } = userData;
   return (
     <form method="post" className="space-y-6">
       <InputField
         name="name"
         type="text"
-        value={userData.name}
+        value={name}
         error={formErrors.name}
         handleChange={handleChange}
       />
@@ -138,7 +139,7 @@ const SignUpForm = props => {
       <InputField
         name="email"
         type="email"
-        value={userData.email}
+        value={email}
         error={formErrors.email}
         handleChange={handleChange}
       />
@@ -146,14 +147,13 @@ const SignUpForm = props => {
       <InputField
         name="password"
         type="password"
-        value={userData.password}
+        value={password}
         error={formErrors.password}
         handleChange={handleChange}
       />
 
       <div>
         <button
-          type="submit"
           onClick={handleRegisterUser}
           className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
         >

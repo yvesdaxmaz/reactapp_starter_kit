@@ -1,6 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect, memo } from 'react';
 
 const InputField = ({ type, label, name, value, error, handleChange }) => {
+  // useEffect(() => {
+  //   console.log(`rerender InputField of ${name}`);
+  // });
   return (
     <div>
       <label htmlFor="name" className="block text-sm font-medium text-gray-700">
@@ -27,4 +30,4 @@ const InputField = ({ type, label, name, value, error, handleChange }) => {
   );
 };
 
-export default InputField;
+export default memo(InputField);
