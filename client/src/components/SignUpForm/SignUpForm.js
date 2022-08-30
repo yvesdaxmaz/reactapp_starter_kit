@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import InputField from './InputField/InputField';
+import InputField from '../InputField/InputField';
 
 const SignUpForm = props => {
   const [isValid, setIsValid] = useState(false);

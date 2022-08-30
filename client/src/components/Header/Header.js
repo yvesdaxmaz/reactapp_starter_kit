@@ -2,7 +2,7 @@ import { MdHome } from 'react-icons/md';
 import { Link, useLocation } from 'react-router-dom';
 import { useStateValue } from '../../StateProvider';
 const Header = props => {
-  const [{ name }, dispatch] = useStateValue();
+  const [{ name, authenticated }, dispatch] = useStateValue();
   const { pathname } = useLocation();
 
   return (
@@ -78,26 +78,30 @@ const Header = props => {
                   >
                     Users
                   </Link>
-                  <Link
-                    to="/signup"
-                    className={
-                      pathname === '/signup'
-                        ? 'bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium'
-                        : 'text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium'
-                    }
-                  >
-                    Sign Up
-                  </Link>
-                  <Link
-                    to="/signin"
-                    className={
-                      pathname === '/signin'
-                        ? 'bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium'
-                        : 'text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium'
-                    }
-                  >
-                    Sign In
-                  </Link>
+                  {!authenticated && (
+                    <>
+                      <Link
+                        to="/signup"
+                        className={
+                          pathname === '/signup'
+                            ? 'bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium'
+                            : 'text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium'
+                        }
+                      >
+                        Sign Up
+                      </Link>
+                      <Link
+                        to="/signin"
+                        className={
+                          pathname === '/signin'
+                            ? 'bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium'
+                            : 'text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium'
+                        }
+                      >
+                        Sign In
+                      </Link>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

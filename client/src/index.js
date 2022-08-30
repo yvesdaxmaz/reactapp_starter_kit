@@ -11,6 +11,8 @@ const initialState = {
   name: 'MERN Skeleton',
   usersFetched: false,
   users: [],
+  authenticated: false,
+  user: null,
 };
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

@@ -1,4 +1,4 @@
-import { FETCH_USERS_LIST } from './actionTypes';
+import { FETCH_USERS_LIST, AUTHENTICATED_USER } from './actionTypes';
 const reducer = (state, action) => {
   switch (action.type) {
     case FETCH_USERS_LIST:
@@ -8,6 +8,9 @@ const reducer = (state, action) => {
         users,
         usersFetched: true,
       };
+    case AUTHENTICATED_USER:
+      let { user } = action;
+      return { ...state, authenticated: true, user };
     default:
       return state;
   }
