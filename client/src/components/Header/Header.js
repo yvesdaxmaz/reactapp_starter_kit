@@ -1,12 +1,15 @@
 import { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { MdHome } from 'react-icons/md';
 import { Link, useLocation } from 'react-router-dom';
 import { useStateValue } from '../../StateProvider';
+import { SIGNOUT_USER } from '../../actionTypes';
 const Header = props => {
   const [{ name, authenticated }, dispatch] = useStateValue();
   const [showProfileOptions, setShowProfileOptions] = useState(false);
   const profileOptionsRef = useRef(null);
   const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   const handleShowOptions = () => {
     setShowProfileOptions(!showProfileOptions);
@@ -19,6 +22,18 @@ const Header = props => {
     ) {
       setShowProfileOptions(false);
     }
+  };
+
+  const handleSignOut = () => {
+    localStorage.removeItem('user');
+
+    dispatch({
+      type: SIGNOUT_USER,
+    });
+
+    setShowProfileOptions(false);
+
+    navigate('/', { replace: true });
   };
   useEffect(() => {
     window.addEventListener('mousedown', hideProfileOptions);
@@ -197,15 +212,15 @@ const Header = props => {
                   >
                     Settings
                   </Link>
-                  <Link
-                    to="/"
+                  <button
+                    onClick={handleSignOut}
                     className="block px-4 py-2 text-sm text-gray-700"
                     role="menuitem"
                     tabIndex="-1"
                     id="user-menu-item-2"
                   >
                     Sign out
-                  </Link>
+                  </button>
                 </div>
               </div>
             </div>
