@@ -20,6 +20,7 @@ router.get(
     passport.authenticate('jwt', { session: false }, function(err, user, info) {
       if (err || !user) {
         res.status(404).json({
+          code: 404,
           type: 'Not Found',
           message: 'Unable to authenticate user with provided token.',
         });

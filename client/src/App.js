@@ -16,10 +16,23 @@ function App() {
   useEffect(() => {
     let authenticatedUser = localStorage.getItem('user');
     if (authenticatedUser) {
-      dispatch({
-        type: AUTHENTICATED_USER,
-        user: JSON.parse(authenticatedUser),
-      });
+      let user = JSON.parse(authenticatedUser);
+      fetch('http://localhost:3000/auth/signin_with_token', {
+        headers: {
+          authorization: `Bearer ${user.token}`,
+        },
+      })
+        .then(res => res.json())
+        .then(data => {
+          if (data.code === 404) {
+            let { errors } = data;
+          } else {
+            dispatch({
+              type: AUTHENTICATED_USER,
+              user: data,
+            });
+          }
+        });
     }
   }, []);
   return (

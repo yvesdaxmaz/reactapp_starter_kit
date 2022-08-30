@@ -111,6 +111,7 @@ describe('Api auth routes', () => {
         .end((err, res) => {
           res.should.have.status(404);
           res.body.type.should.be.eql('Not Found');
+          res.body.code.should.be.eql(404);
           res.body.message.should.be.eql(
             'Unable to authenticate user with provided token.',
           );
