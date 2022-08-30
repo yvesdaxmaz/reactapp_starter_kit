@@ -6,12 +6,9 @@ import Home from './pages/Home/Home';
 import Users from './pages/Users/Users';
 import SignUp from './pages/SignUp/SignUp';
 import SignIn from './pages/SignIn/SignIn';
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import { useStateValue } from './StateProvider';
 import { AUTHENTICATED_USER } from './actionTypes';
-
-function ProtectedRoute({ authenticated }) {
-  return !authenticated ? <Outlet /> : <Navigate to="/" />;
-}
 
 function App() {
   const [{ authenticated }, dispatch] = useStateValue();
