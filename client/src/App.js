@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Layout from './containers/Layout';
 import Header from './components/Header/Header';
 import { Routes, Route, Outlet, Navigate } from 'react-router-dom';
@@ -6,16 +7,20 @@ import Home from './pages/Home/Home';
 import Users from './pages/Users/Users';
 import SignUp from './pages/SignUp/SignUp';
 import SignIn from './pages/SignIn/SignIn';
+import Profile from './pages/Profile/Profile';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
+import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import { useStateValue } from './StateProvider';
 import { AUTHENTICATED_USER } from './actionTypes';
 
 function App() {
   const [{ authenticated }, dispatch] = useStateValue();
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     let authenticatedUser = localStorage.getItem('user');
-    if (authenticatedUser) {
+    if (!authenticated && authenticatedUser) {
       let user = JSON.parse(authenticatedUser);
       fetch('http://localhost:3000/auth/signin_with_token', {
         headers: {
@@ -26,11 +31,13 @@ function App() {
         .then(data => {
           if (data.code === 404) {
             let { errors } = data;
+            localStorage.removeItem('user');
           } else {
             dispatch({
               type: AUTHENTICATED_USER,
               user: data,
             });
+            navigate(pathname);
           }
         });
     }
@@ -47,6 +54,12 @@ function App() {
         >
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<SignIn />} />
+        </Route>
+        <Route
+          path="/users/:user_id"
+          element={<PrivateRoute authenticated={authenticated} />}
+        >
+          <Route path="/users/:user_id" element={<Profile />} />
         </Route>
       </Routes>
     </Layout>
