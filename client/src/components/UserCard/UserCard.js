@@ -2,7 +2,7 @@ import { useStateValue } from '../../StateProvider';
 import { useParams } from 'react-router-dom';
 import { SIGNOUT_USER } from '../../actionTypes';
 import moment from 'moment';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 const UserCard = ({ user }) => {
   const [{ user: authenticatedUser }, dispatch] = useStateValue();
   const { user_id } = useParams();
@@ -49,8 +49,8 @@ const UserCard = ({ user }) => {
         </dl>
         {authenticatedUser.user.id == user_id ? (
           <span className="isolate inline-flex rounded-md shadow-sm mx-auto">
-            <button
-              type="button"
+            <Link
+              to={`/users/${user_id}/edit`}
               className="relative inline-flex items-center rounded-l-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
             >
               <svg
@@ -69,7 +69,7 @@ const UserCard = ({ user }) => {
                 />
               </svg>
               Edit
-            </button>
+            </Link>
             <button
               type="button"
               onClick={handleDeleteProfile}

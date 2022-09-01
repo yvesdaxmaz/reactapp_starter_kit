@@ -8,6 +8,7 @@ import Users from './pages/Users/Users';
 import SignUp from './pages/SignUp/SignUp';
 import SignIn from './pages/SignIn/SignIn';
 import Profile from './pages/Profile/Profile';
+import EditProfile from './pages/EditProfile/EditProfile';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import { useStateValue } from './StateProvider';
@@ -60,6 +61,12 @@ function App() {
           element={<PrivateRoute authenticated={authenticated} />}
         >
           <Route path="/users/:user_id" element={<Profile />} />
+        </Route>
+        <Route
+          path="/users/:user_id/edit"
+          element={<PrivateRoute authenticated={authenticated} />}
+        >
+          <Route path="/users/:user_id/edit" element={<EditProfile />} />
         </Route>
       </Routes>
     </Layout>
