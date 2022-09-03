@@ -112,6 +112,7 @@ describe('Users api routes', () => {
           .set('authorization', `Bearer ${token}`)
           .send({
             email: 'john@doe.com',
+            password: '123456',
           })
           .end((err, res) => {
             res.should.have.status(200);
@@ -174,6 +175,78 @@ describe('Users api routes', () => {
             done();
           });
       });
+    });
+
+    it('should not update user password with empty password', done => {
+      db.sequelize.queryInterface
+        .bulkInsert('users', [
+          {
+            name: 'Jeanne',
+            email: 'jeannedoe@example.com',
+            password: '123456',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+        ])
+        .then(users => {
+          db.User.findByPk(1).then(user => {
+            let token = jwt.sign(
+              { id: user.id },
+              '5ebe2294ecd0e0f08eab7690d2a6ee69',
+            );
+            chai
+              .request(app)
+              .put('/api/users/1')
+              .set('authorization', `Bearer ${token}`)
+              .send({
+                email: 'jeannedoe2@example.com',
+                password: '',
+              })
+              .end((err, res) => {
+                res.should.have.status(400);
+                res.body.errors.should.be.a('object');
+                res.body.errors.password.should.be.a('object');
+                res.body.errors.password.errors.length.should.be.eql(1);
+                done();
+              });
+          });
+        });
+    });
+
+    it('should not update user password with short password', done => {
+      db.sequelize.queryInterface
+        .bulkInsert('users', [
+          {
+            name: 'Jeanne',
+            email: 'jeannedoe@example.com',
+            password: '123456',
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+        ])
+        .then(users => {
+          db.User.findByPk(1).then(user => {
+            let token = jwt.sign(
+              { id: user.id },
+              '5ebe2294ecd0e0f08eab7690d2a6ee69',
+            );
+            chai
+              .request(app)
+              .put('/api/users/1')
+              .set('authorization', `Bearer ${token}`)
+              .send({
+                email: 'jeannedoe2@example.com',
+                password: '1234',
+              })
+              .end((err, res) => {
+                res.should.have.status(400);
+                res.body.errors.should.be.a('object');
+                res.body.errors.password.should.be.a('object');
+                res.body.errors.password.errors.length.should.be.eql(1);
+                done();
+              });
+          });
+        });
     });
   });
 

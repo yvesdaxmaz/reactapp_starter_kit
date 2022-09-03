@@ -103,7 +103,7 @@ describe('Api auth routes', () => {
     });
   });
 
-  describe.only('GET route /auth/signin_with_token', () => {
+  describe('GET route /auth/signin_with_token', () => {
     it('should not authenticate user without valid token', done => {
       chai
         .request(app)

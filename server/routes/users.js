@@ -54,6 +54,14 @@ router.put(
         nullable: true,
       },
     },
+    password: {
+      isLength: {
+        options: { min: 6 },
+      },
+      optional: {
+        nullable: true,
+      },
+    },
   }),
   function(req, res, next) {
     const result = validationResult(req);
