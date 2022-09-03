@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import InputField from '../InputField/InputField';
+import { useStateValue } from '../../StateProvider';
 
 const SignUpForm = props => {
+  const [{ apiPath }, dispatch] = useStateValue();
   const [isValid, setIsValid] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [formErrors, setFormErrors] = useState({
@@ -86,7 +88,7 @@ const SignUpForm = props => {
 
   const registerUser = () => {
     setIsSubmitted(true);
-    fetch('http://localhost:3000/api/users', {
+    fetch(`${apiPath}/api/users`, {
       method: 'post',
       headers: {
         Accept: 'application/json',

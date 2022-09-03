@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useStateValue } from '../../StateProvider';
 import InputField from '../../components/InputField/InputField';
+import { USER_UPDATED } from '../../actionTypes';
 const EditProfile = props => {
+  const [{ user: authenticatedUser, apiPath }, dispatch] = useStateValue();
   const [isValid, setIsValid] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const [{ user: authenticatedUser }, dispatch] = useStateValue();
+  const navigate = useNavigate();
 
   const [formErrors, setFormErrors] = useState({
     name: null,
@@ -73,13 +75,20 @@ const EditProfile = props => {
     }
   };
   const updateUser = () => {
-    fetch(`http://localhost:3000/api/users/${authenticatedUser.user.id}`, {
+    const requestData = Object.keys(userData).reduce((accumulator, current) => {
+      if (userData[current] != '') {
+        accumulator = { ...accumulator, [current]: userData[current] };
+      }
+      return accumulator;
+    }, {});
+    fetch(`${apiPath}/api/users/${authenticatedUser.user.id}`, {
       method: 'put',
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
+        authorization: `Bearer ${authenticatedUser.token}`,
       },
-      body: JSON.stringify(userData),
+      body: JSON.stringify(requestData),
     })
       .then(res => res.json())
       .then(data => {
@@ -93,8 +102,6 @@ const EditProfile = props => {
         } else {
           setFormErrors({
             name: null,
-            email: null,
-            password: null,
           });
 
           setUserData({
@@ -103,6 +110,11 @@ const EditProfile = props => {
             password: '',
           });
           setIsSubmitted(false);
+          dispatch({
+            type: USER_UPDATED,
+            data,
+          });
+          navigate(`/users/${authenticatedUser.user.id}`);
         }
       });
   };
@@ -159,9 +171,9 @@ const EditProfile = props => {
                 <div>
                   <button
                     onClick={handleUpdateUser}
-                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-green-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                   >
-                    Sign in
+                    Save
                   </button>
                 </div>
               </form>

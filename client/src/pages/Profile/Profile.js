@@ -4,11 +4,11 @@ import { useStateValue } from '../../StateProvider';
 import UserCard from '../../components/UserCard/UserCard';
 
 const Profile = props => {
-  const [{ user }, dispatch] = useStateValue();
+  const [{ user, apiPath }, dispatch] = useStateValue();
   const { user_id } = useParams();
 
   useEffect(() => {
-    fetch(`http://localhost:3000/api/users/${user_id}`, {
+    fetch(`${apiPath}/api/users/${user_id}`, {
       method: 'get',
       headers: {
         'Content-Type': 'application/json',

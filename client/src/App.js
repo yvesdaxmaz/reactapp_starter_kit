@@ -15,7 +15,7 @@ import { useStateValue } from './StateProvider';
 import { AUTHENTICATED_USER } from './actionTypes';
 
 function App() {
-  const [{ authenticated }, dispatch] = useStateValue();
+  const [{ authenticated, apiPath }, dispatch] = useStateValue();
   const { pathname } = useLocation();
   const navigate = useNavigate();
 
@@ -23,7 +23,7 @@ function App() {
     let authenticatedUser = localStorage.getItem('user');
     if (!authenticated && authenticatedUser) {
       let user = JSON.parse(authenticatedUser);
-      fetch('http://localhost:3000/auth/signin_with_token', {
+      fetch(`${apiPath}/auth/signin_with_token`, {
         headers: {
           authorization: `Bearer ${user.token}`,
         },

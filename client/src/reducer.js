@@ -2,6 +2,7 @@ import {
   FETCH_USERS_LIST,
   AUTHENTICATED_USER,
   SIGNOUT_USER,
+  USER_UPDATED,
 } from './actionTypes';
 const reducer = (state, action) => {
   switch (action.type) {
@@ -21,6 +22,8 @@ const reducer = (state, action) => {
         authenticated: false,
         user: null,
       };
+    case USER_UPDATED:
+      return { ...state, user: { ...state.user, user: { ...action.data } } };
     default:
       return state;
   }

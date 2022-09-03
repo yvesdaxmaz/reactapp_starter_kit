@@ -13,6 +13,8 @@ const initialState = {
   users: [],
   authenticated: false,
   user: null,
+  apiPath: 'http://192.168.141.4:3000',
+  // apiPath: 'http://localhost:300',
 };
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

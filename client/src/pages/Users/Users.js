@@ -4,12 +4,12 @@ import { useStateValue } from '../../StateProvider';
 import UsersList from '../../components/UsersList/UserList';
 
 const Users = props => {
-  const [{ users, usersFetched }, dispatch] = useStateValue();
+  const [{ users, usersFetched, apiPath }, dispatch] = useStateValue();
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
     if (!usersFetched) {
-      fetch('http://localhost:3000/api/users', { method: 'get', signal })
+      fetch(`${apiPath}/api/users`, { method: 'get', signal })
         .then(response => response.json())
         .then(users => {
           dispatch({ type: FETCH_USERS_LIST, users });

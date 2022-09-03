@@ -5,7 +5,7 @@ import { AUTHENTICATED_USER } from '../../actionTypes';
 import { useStateValue } from '../../StateProvider';
 
 const SignInForm = props => {
-  const [state, dispatch] = useStateValue();
+  const [{ apiPath }, dispatch] = useStateValue();
   const [isValid, setIsValid] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [authError, setAuthError] = useState('');
@@ -33,7 +33,7 @@ const SignInForm = props => {
 
   const authenticateUser = () => {
     setIsSubmitted(true);
-    fetch('http://localhost:3000/auth/signin', {
+    fetch(`${apiPath}/auth/signin`, {
       method: 'post',
       headers: {
         Accept: 'application/json',
